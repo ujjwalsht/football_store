@@ -1,0 +1,404 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Tu Casaca API",
+        "version": "1.0"
+    },
+    "paths": {
+        "/_api/camisetas": {
+            "get": {
+                "tags": [
+                    "Camisetas"
+                ],
+                "summary": "Retorna todas las camisetas",
+                "operationId": "9b165f3b2edcdcc7536f94220bc7f260",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Camiseta"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/_api/camisetas/categoria/{categoria}": {
+            "get": {
+                "tags": [
+                    "Camisetas"
+                ],
+                "summary": "Retorna todas las camisetas que pertenezcan a una categoria",
+                "operationId": "ddad25b1d16ce3349165d9e1a831ece5",
+                "parameters": [
+                    {
+                        "name": "categoria",
+                        "in": "path",
+                        "description": "Nombre de categoria a obtener camisetas",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Selecciones"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Camiseta"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Error: Unprocessable Content",
+                        "content": {
+                            "text/html": {
+                                "example": "El nombre de la categoría tiene que ser valido"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/_api/categorias": {
+            "get": {
+                "tags": [
+                    "Categorias"
+                ],
+                "summary": "Retorna las categorías",
+                "operationId": "560acf57d11813fe9f3dba46b1a3fe74",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Categoria"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/_api/compras/{email}": {
+            "get": {
+                "tags": [
+                    "Compras"
+                ],
+                "summary": "Retorna todas las compras con sus pedidos que pertenezcan a un cliente",
+                "operationId": "34a652a79f095e7052efdbe579af256c",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "Email de cliente del cual recuperar sus compras",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Compra"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error: Unauthorized"
+                    }
+                }
+            }
+        },
+        "/_api/comprar/auth": {
+            "post": {
+                "tags": [
+                    "Compras"
+                ],
+                "summary": "Autoriza un pago",
+                "operationId": "3a2644b8192a85f812940c0e182cd7b6",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "payer": {
+                                        "type": "object",
+                                        "example": "ematiradani@gmail.com"
+                                    },
+                                    "installments": {
+                                        "type": "number",
+                                        "example": "1"
+                                    },
+                                    "transaction_amout": {
+                                        "type": "number",
+                                        "example": "100.50"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "example": "ff8080814c11e237014c1ff593b57b4d"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "accepted"
+                                        },
+                                        "status_detail": {
+                                            "type": "string",
+                                            "example": "accredited"
+                                        },
+                                        "id": {
+                                            "type": "number",
+                                            "example": "3055665"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/_api/comprar": {
+            "post": {
+                "tags": [
+                    "Compras"
+                ],
+                "summary": "Realiza una compra con sus pedidos",
+                "operationId": "f044fa25bc13d98f4e43ba6057204929",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "cliente",
+                                    "forma_de_pago",
+                                    "direccion_de_entrega",
+                                    "pedidos"
+                                ],
+                                "properties": {
+                                    "cliente": {
+                                        "type": "string",
+                                        "example": "ematiradani@gmail.com"
+                                    },
+                                    "forma_de_pago": {
+                                        "type": "string",
+                                        "example": "Tarjeta Visa"
+                                    },
+                                    "direccion_de_entrega": {
+                                        "type": "string",
+                                        "example": "Av Alem y San Juan"
+                                    },
+                                    "pedidos": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "nombre_camiseta": {
+                                                    "type": "string",
+                                                    "example": "Camiseta Titular Boca"
+                                                },
+                                                "nombre_a_estampar": {
+                                                    "type": "string",
+                                                    "example": "Ema"
+                                                },
+                                                "numero_a_estampar": {
+                                                    "type": "string",
+                                                    "example": "10"
+                                                },
+                                                "talle_elegido": {
+                                                    "type": "string",
+                                                    "example": "S"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "Compra realizada con éxito"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Error: Unauthorized"
+                    },
+                    "422": {
+                        "description": "Error: Unprocessable Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Un pedido debe contener un nombre_camiseta: valido, no eliminado y en stock"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": "cliente: [mensajes de error en parametro cliente], forma_de_pago: [mensajes de error...]..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Camiseta": {
+                "properties": {
+                    "nombre": {
+                        "type": "string",
+                        "example": "Camiseta argentina"
+                    },
+                    "descripcion": {
+                        "type": "string",
+                        "example": "Descripcion de prueba"
+                    },
+                    "precio": {
+                        "type": "number",
+                        "example": 45999.99
+                    },
+                    "imagen_frente": {
+                        "type": "string",
+                        "format": "base64",
+                        "example": "data:base64/png:testwaeaw"
+                    },
+                    "imagen_atras": {
+                        "type": "string",
+                        "format": "base64",
+                        "example": "data:base64/png:testwaeaw"
+                    },
+                    "talles_disponibles": {
+                        "type": "string",
+                        "example": "XS,S,XL"
+                    },
+                    "activo": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "categorias": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Categoria"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "Categoria": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Selecciones"
+                    }
+                },
+                "type": "object"
+            },
+            "Compra": {
+                "properties": {
+                    "cliente": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "ematiradani@gmail.com"
+                    },
+                    "forma_de_pago": {
+                        "type": "string",
+                        "example": "Mastercard"
+                    },
+                    "direccion_de_entrega": {
+                        "type": "string",
+                        "example": "Segurola y La Habana"
+                    },
+                    "pedidos": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Pedido"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "Pedido": {
+                "properties": {
+                    "camiseta_id": {
+                        "type": "string",
+                        "example": "Camiseta River"
+                    },
+                    "nombre_a_estampar": {
+                        "type": "string",
+                        "example": "Juan Román"
+                    },
+                    "numero_a_estampar": {
+                        "type": "string",
+                        "example": "8"
+                    },
+                    "precio": {
+                        "type": "number",
+                        "example": 10000.5
+                    },
+                    "talle_elegido": {
+                        "type": "string",
+                        "example": "XL"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}

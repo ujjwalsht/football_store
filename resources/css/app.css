@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.page-content {
+    width: 85%;
+    margin: auto;
+    margin-top: 3%;
+}
+
+.nav-logo {
+    width: 50px;
+    height: 50px;
+}
+
+.home-card {
+    width: 18rem;
+}
+
+.mapa {
+    height: 300px;
+    width: 100%;
+}
